@@ -28,7 +28,7 @@ public class IndiceLight extends Indice
 	/**
 	 * Ultimo indice (com algum valor valido) nos vetores
 	 */
-	private int lastIdx = -1;
+	private int lastIdx = 0;
 	/**
 	 * Armazena o ultimo id de termo criado. Utilizado para criar um 
 	 * id incremental dos termos.
@@ -49,7 +49,7 @@ public class IndiceLight extends Indice
 	@Override
 	public int getNumDocumentos()
 	{
-
+            return 0;
 	}
 
 	/**
@@ -69,33 +69,31 @@ public class IndiceLight extends Indice
 	@Override
 	public void index(String termo,int docId,int freqTermo)
 	{
+            arrTermId[lastIdx] = lastTermId;
+            arrDocId[lastIdx] = docId;
+            arrFreqTermo[lastIdx] = freqTermo;
 
-		
-		
-		
+            lastIdx++;
+            lastTermId++;
 	}
 
-	
-
-
-	
 	
 	@Override
 	public Map<String,Integer> getNumDocPerTerm()
 	{
-
+            return null;
 	}
 	
 	@Override
 	public Set<String> getListTermos()
 	{
-
+              return null;
 	}
 	
 	@Override
 	public List<Ocorrencia> getListOccur(String termo)
 	{
-
+              return null;
 	}
 	
 	/**

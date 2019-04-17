@@ -32,18 +32,19 @@ public class IndiceSimples extends Indice
 	@Override
 	public void index(String termo,int docId,int freqTermo) 
 	{
-            Map<String,List<Ocorrencia>> map = null;
+            List<Ocorrencia> map = null;
 
             map = mapIndice.get(termo);
+                    
             if (map != null) {
                Ocorrencia oc = new Ocorrencia(docId, freqTermo);
-               map.put(termo, oc);
+               map.add(oc);
+               mapIndice.put(termo, map);
             } else {
                Ocorrencia doTermo = new Ocorrencia(docId, freqTermo);
-               
                List<Ocorrencia> list = new ArrayList<Ocorrencia>();
                list.add(doTermo);
-               map.put(termo,list);
+               mapIndice.put(termo,list);
             } 
             
 	}
@@ -55,10 +56,7 @@ public class IndiceSimples extends Indice
         
             for (String termo : mapIndice.keySet()) {
                 List<Ocorrencia> list =  mapIndice.get(termo);
-                for(Ocorrencia t : list)
-                {
-                   numDocPerTerm.put(termo, t.getFreq());
-                }
+                numDocPerTerm.put(termo, list.size());
             }
             return numDocPerTerm;
 	}

@@ -2,7 +2,7 @@ package src.indice.teste;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import indice.estrutura.*;
+import src.indice.estrutura.*;
 
 import java.util.HashSet;
 import java.util.Set;

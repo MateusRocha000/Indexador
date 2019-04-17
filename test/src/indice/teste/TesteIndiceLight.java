@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
-import indice.estrutura.IndiceLight;
+import src.indice.estrutura.IndiceLight;
 
 import org.junit.Test;
 
@@ -16,6 +16,12 @@ public class TesteIndiceLight {
 	*/
 	
 	public static int[] arrTermIDOrig = {1,1 ,1 ,2 ,2 ,3 ,3 ,3 ,4 ,4 ,5 ,6};
+        //1: <1, 0, 3>
+        //2: <2, 4, 2>
+        //3: <3, 6, 3>
+        //4: <4, 9, 2>
+        //5: <5, 11, 1>
+        //6: <6, 12, 1>
 	public static int[] arrDocIDOrig = {10,20,30,10,20,30,40,50,20,50,60,70};
 	public static int[] arrFreqTOrig = {1 , 2, 3, 4, 5, 6, 7, 8, 9,10,11,12};
 	private int[] arrDocId = {};

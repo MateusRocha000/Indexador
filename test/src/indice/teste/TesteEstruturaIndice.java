@@ -1,7 +1,7 @@
 package src.indice.teste;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import indice.estrutura.*;
+import src.indice.estrutura.*;
 
 
 import java.util.ArrayList;
