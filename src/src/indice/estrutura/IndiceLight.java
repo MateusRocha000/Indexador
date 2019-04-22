@@ -23,7 +23,8 @@ public class IndiceLight extends Indice
 	private int[] arrDocId;
 	private int[] arrTermId;
 	private int[] arrFreqTermo;
-	
+	private int checkFull = 0;
+        int initCapGlobal;
 	
 	/**
 	 * Ultimo indice (com algum valor valido) nos vetores
@@ -35,11 +36,10 @@ public class IndiceLight extends Indice
 	 */
 	private int lastTermId = 0;
 	
-	
-	
-	
+		
 	public IndiceLight(int initCap)
 	{
+                initCapGlobal = initCap;
 		arrDocId = new int[initCap];
 		arrTermId = new int[initCap];
 		arrFreqTermo = new int[initCap];
@@ -69,10 +69,32 @@ public class IndiceLight extends Indice
 	@Override
 	public void index(String termo,int docId,int freqTermo)
 	{
+            PosicaoVetor posiVetor = posicaoIndice.get(termo);
+            
+            if(posiVetor.getNumDocumentos() > 0 ){
+                posiVetor.setNumDocumentos(freqTermo);
+                posiVetor.setPosInicial(lastTermId);
+                posicaoIndice.put(termo, posiVetor);
+            } else {
+                PosicaoVetor newPosiVetor = new PosicaoVetor(docId);
+                newPosiVetor.setNumDocumentos(freqTermo);
+                newPosiVetor.setPosInicial(lastTermId);
+                posicaoIndice.put(termo, newPosiVetor);
+            }
+            
+            if(checkFull == initCapGlobal)
+            {
+                arrTermId = aumentaCapacidadeVetor(arrTermId, 10);
+                arrDocId = aumentaCapacidadeVetor(arrDocId, 10);
+                arrFreqTermo = aumentaCapacidadeVetor(arrFreqTermo, 10);
+                System.gc();
+            }  
+
             arrTermId[lastIdx] = lastTermId;
             arrDocId[lastIdx] = docId;
             arrFreqTermo[lastIdx] = freqTermo;
-
+            
+            checkFull++;
             lastIdx++;
             lastTermId++;
 	}
@@ -81,19 +103,48 @@ public class IndiceLight extends Indice
 	@Override
 	public Map<String,Integer> getNumDocPerTerm()
 	{
-            return null;
+            Map<String,Integer>  numDocPerTerm = new HashMap<String, Integer>();
+        
+            for(int i = 0; i < arrTermId.length ; i++ ){
+           
+                
+                arrTermId[lastIdx] = lastTermId;
+                arrDocId[lastIdx] = docId;
+                arrFreqTermo[lastIdx] = freqTermo;
+                
+            }
+
+            return numDocPerTerm;
 	}
+        
+        public int[] aumentaCapacidadeVetor(int[] vetor, double d)
+        {
+            double size = vetor.length;
+            double new_size = size * (100+d)/100;
+            int new_vet[] = new int[(int)new_size];
+            initCapGlobal = (int) new_size;
+            for(int i = 0; i < size; i++)
+            {
+                new_vet[i] = vetor[i];
+            }
+            
+            return new_vet;
+        }
 	
 	@Override
 	public Set<String> getListTermos()
 	{
-              return null;
+            Set<String> setTermos = new HashSet<String>();
+            for (String termo : mapIndice.keySet()) {
+                setTermos.add(termo);
+            }
+            return setTermos;
 	}
 	
 	@Override
 	public List<Ocorrencia> getListOccur(String termo)
 	{
-              return null;
+            return mapIndice.get(termo);
 	}
 	
 	/**
@@ -110,16 +161,18 @@ public class IndiceLight extends Indice
 	 * 
 	 */
 	@Override
-	public void concluiIndexacao(){
-
-		
-
+	public void concluiIndexacao()
+        {
+            ordenaIndice();
+            
+            Map<Integer, PosicaoVetor> arrTermoPorId = new HashMap<Integer, PosicaoVetor>();
+            
 	}
 
 	public void ordenaIndice()
 	{
-		quickSort(0, lastIdx);
-		//insertionSort();
+            quickSort(0, lastIdx);
+            //insertionSort();
 	}
 
 	/**
