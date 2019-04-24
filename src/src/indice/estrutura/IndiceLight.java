@@ -178,6 +178,7 @@ public class IndiceLight extends Indice
                     posiVetor[arrTermId[i]].setNumDocumentos(countNumeroDocumentos);
                     posiVetor[arrTermId[i]].setPosInicial(posiInicial);
                     posiInicial = i+1;
+                    //Quando chegar na última posição pode dar pau. Verificar
                 }     
             }
             
