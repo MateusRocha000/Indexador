@@ -163,9 +163,27 @@ public class IndiceLight extends Indice
 	@Override
 	public void concluiIndexacao()
         {
-            ordenaIndice();
+            ordenaIndice(); 
+            PosicaoVetor[] posiVetor = new PosicaoVetor[lastIdx + 1];
+            int countNumeroDocumentos = 0;
+            int posiInicial = 0;
+            for (String termo : posicaoIndice.keySet()){
+                posiVetor[posicaoIndice.get(termo).getIdTermo()] = posicaoIndice.get(termo);
+            }
             
-            Map<Integer, PosicaoVetor> arrTermoPorId = new HashMap<Integer, PosicaoVetor>();
+            for(int i = 0 ; i< lastIdx; i++){
+                if(arrTermId[i] == arrTermId[i+1]){
+                    countNumeroDocumentos++;
+                }else {
+                    posiVetor[arrTermId[i]].setNumDocumentos(countNumeroDocumentos);
+                    posiVetor[arrTermId[i]].setPosInicial(posiInicial);
+                    posiInicial = i+1;
+                }     
+            }
+            
+            for (String termo : posicaoIndice.keySet()){
+               posicaoIndice.put(termo,  posiVetor[posicaoIndice.get(termo).getIdTermo()] );
+            }
             
 	}
 
