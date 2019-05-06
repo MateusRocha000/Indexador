@@ -49,7 +49,7 @@ public class IndiceLight extends Indice
 	@Override
 	public int getNumDocumentos()
 	{
-            return 0;
+            return posicaoIndice.size();
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class IndiceLight extends Indice
 	{
             PosicaoVetor posiVetor = posicaoIndice.get(termo);
             
-            if(posiVetor.getNumDocumentos() > 0 ){
+            if(posiVetor != null){
                 posiVetor.setNumDocumentos(freqTermo);
                 posiVetor.setPosInicial(lastTermId);
                 posicaoIndice.put(termo, posiVetor);
@@ -99,24 +99,6 @@ public class IndiceLight extends Indice
             lastTermId++;
 	}
 
-	
-	@Override
-	public Map<String,Integer> getNumDocPerTerm()
-	{
-            Map<String,Integer>  numDocPerTerm = new HashMap<String, Integer>();
-        
-            for(int i = 0; i < arrTermId.length ; i++ ){
-           
-                
-                arrTermId[lastIdx] = lastTermId;
-                arrDocId[lastIdx] = docId;
-                arrFreqTermo[lastIdx] = freqTermo;
-                
-            }
-
-            return numDocPerTerm;
-	}
-        
         public int[] aumentaCapacidadeVetor(int[] vetor, double d)
         {
             double size = vetor.length;
@@ -132,10 +114,25 @@ public class IndiceLight extends Indice
         }
 	
 	@Override
+	public Map<String,Integer> getNumDocPerTerm()
+        {
+           Map<String,Integer>  numDocPerTerm = new HashMap<String, Integer>();
+           
+           
+            for (String termo : posicaoIndice.keySet()) {
+                PosicaoVetor posV = posicaoIndice.get(termo);
+                numDocPerTerm.put(termo, posV.getNumDocumentos());
+            }
+            return numDocPerTerm;
+	}
+        
+        
+	
+	@Override
 	public Set<String> getListTermos()
 	{
             Set<String> setTermos = new HashSet<String>();
-            for (String termo : mapIndice.keySet()) {
+            for (String termo : posicaoIndice.keySet()) {
                 setTermos.add(termo);
             }
             return setTermos;
@@ -144,7 +141,20 @@ public class IndiceLight extends Indice
 	@Override
 	public List<Ocorrencia> getListOccur(String termo)
 	{
-            return mapIndice.get(termo);
+            List<Ocorrencia> listOc = new ArrayList<Ocorrencia>();
+            PosicaoVetor posiVetor = posicaoIndice.get(termo);
+            int posiInicial = posiVetor.getPosInicial();
+            int numeroDocumentos = posiVetor.getNumDocumentos();
+           
+            for(int i = posiInicial; i <= posiInicial+ numeroDocumentos; i++){
+                Ocorrencia oc = new Ocorrencia(
+                    arrDocId[i],
+                    arrFreqTermo[i]               
+                );
+                listOc.add(oc);
+            }
+
+            return listOc;
 	}
 	
 	/**
@@ -168,16 +178,18 @@ public class IndiceLight extends Indice
             int countNumeroDocumentos = 0;
             int posiInicial = 0;
             for (String termo : posicaoIndice.keySet()){
-                posiVetor[posicaoIndice.get(termo).getIdTermo()] = posicaoIndice.get(termo);
+                posiVetor[posicaoIndice.get(termo).getIdTermo()-1] = posicaoIndice.get(termo);
             }
             
             for(int i = 0 ; i< lastIdx; i++){
                 if(arrTermId[i] == arrTermId[i+1]){
                     countNumeroDocumentos++;
                 }else {
-                    posiVetor[arrTermId[i]].setNumDocumentos(countNumeroDocumentos);
-                    posiVetor[arrTermId[i]].setPosInicial(posiInicial);
-                    posiInicial = i+1;
+                        posiVetor[arrTermId[i]].setNumDocumentos(countNumeroDocumentos);
+                        posiVetor[arrTermId[i]].setPosInicial(posiInicial);
+                        posiInicial = i+1;
+                 
+                 
                     //Quando chegar na última posição pode dar pau. Verificar
                 }     
             }
